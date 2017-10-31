@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Collisions : MonoBehaviour
 {
-
     [Header("States")]
     public bool isGrounded;
     public bool wasGroundedLastFrame;
@@ -40,7 +39,7 @@ public class Collisions : MonoBehaviour
     public Vector2 cellingedBoxPos;
     public Vector2 cellingedBoxSize;
 
-    void FixedUpdate()
+    virtual public void MyFixedUpdate()
     {
         ResetState();
 
@@ -112,6 +111,11 @@ public class Collisions : MonoBehaviour
         {
             isCellinged = true;
         }
+    }
+
+    public  void Flip(bool isFacingRight)
+    {
+        walledBoxPos.x *= -1;
     }
 
     private void OnDrawGizmosSelected()

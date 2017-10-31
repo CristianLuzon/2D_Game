@@ -21,12 +21,16 @@ public class CollisionsEditor : Editor
             EditorGUILayout.BeginVertical(EditorStyles.textField);
             GroundChecks(myStyle, inspector);
             EditorGUI.indentLevel = 0;
+            myStyle.normal.textColor = Color.clear;
             EditorGUILayout.LabelField("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             WallChecks(myStyle, inspector);
             EditorGUI.indentLevel = 0;
+            myStyle.normal.textColor = Color.white;
+
             EditorGUILayout.LabelField("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             CellingChecks(myStyle, inspector);
             EditorGUI.indentLevel = 0;
+            myStyle.normal.textColor = Color.white;
             EditorGUILayout.LabelField("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             GeneralCheck(myStyle, inspector);
 
