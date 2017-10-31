@@ -5,7 +5,7 @@ using UnityEngine;
 public class Collisions : MonoBehaviour
 {
 
-    [Header("State")]
+    [Header("States")]
     public bool isGrounded;
     public bool wasGroundedLastFrame;
     public bool justNotGrounded;
@@ -30,7 +30,7 @@ public class Collisions : MonoBehaviour
     public bool checkWall;
     public bool checkCelling;
 
-    [Header("Filter")]
+    [Header("Gizmos")]
     public Vector2 groundedBoxPos;
     public Vector2 groundedBoxSize;
 
@@ -39,11 +39,6 @@ public class Collisions : MonoBehaviour
 
     public Vector2 cellingedBoxPos;
     public Vector2 cellingedBoxSize;
-
-    void Start()
-    {
-
-    }
 
     void FixedUpdate()
     {
