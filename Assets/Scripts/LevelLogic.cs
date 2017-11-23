@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class LevelLogic : MonoBehaviour
 {
     [Header("Scenes")]
-    public int currentScene;
     public int backScene;
+    public int currentScene;
     public int nextScene;
 
-    private int managerScene=1;
+    private int managerScene=0;
     private int sceneCountBuildIndex;
 
     [Header("Load Parameters")]
@@ -18,6 +19,10 @@ public class LevelLogic : MonoBehaviour
     private AsyncOperation asyUnload = null;
     public bool loading;
     private int sceneToLoad;
+
+    [Header("UI")]
+    public Image blackScreen;
+    public float fadeTime = 1.0f;
 
     void Start ()
     {
@@ -29,19 +34,21 @@ public class LevelLogic : MonoBehaviour
 
         if(currentScene == managerScene)
         {
-            Load(nextScene);
+            StartLoad(nextScene);
 
         }
+
+        blackScreen.color = Color.black;
     }
 	
 	void Update ()
     {
 		if(Input.GetKey(KeyCode.AltGr))
         {
-            if(Input.GetKeyDown(KeyCode.N)) Load(nextScene);
-            if(Input.GetKeyDown(KeyCode.B)) Load(backScene);
-            if(Input.GetKeyDown(KeyCode.R))  Load(currentScene);
-            if(Input.GetKeyDown(KeyCode.M)) Load(managerScene);
+            if(Input.GetKeyDown(KeyCode.N)) StartLoad(nextScene);
+            if(Input.GetKeyDown(KeyCode.B)) StartLoad(backScene);
+            if(Input.GetKeyDown(KeyCode.R)) StartLoad(currentScene);
+            if(Input.GetKeyDown(KeyCode.M)) StartLoad(managerScene);
 
         }
 	}
@@ -71,21 +78,37 @@ public class LevelLogic : MonoBehaviour
 
     }
 
-    void Load(int index)
+    void StartLoad(int index)
     {
         if(loading) return;
 
         loading = true;
         sceneToLoad = index;
 
-        if(currentScene!=managerScene)
+        FadeOut();
+        StartCoroutine(Loading());
+    }
+
+    void Load()
+    {
+        if(currentScene != managerScene)
         {
             asyUnload = SceneManager.UnloadSceneAsync(currentScene);
         }
 
-        asyLoad = SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
+        if(currentScene != managerScene) SceneManager.UnloadSceneAsync(currentScene);
+        asyLoad = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+    }
 
-        StartCoroutine(Loading());
+    public void FadeIn()
+    {
+        blackScreen.CrossFadeAlpha(0, fadeTime, true);
+    }
+
+    public void FadeOut()
+    {
+        blackScreen.CrossFadeAlpha(1, fadeTime, true);
+
     }
 
     IEnumerator Loading()
@@ -97,9 +120,17 @@ public class LevelLogic : MonoBehaviour
                 SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneToLoad));
                 UpdateSceneState();
 
+                FadeIn();
+
                 loading = false;
             }
             yield return null;
         }
+    }
+
+    IEnumerator WaitForTransition()
+    {
+        yield return new WaitForSeconds(fadeTime);
+        Load();
     }
 }
